@@ -1,5 +1,4 @@
 var CopyWebpackPlugin = require('copy-webpack-plugin');
-var Crx = require("crx-webpack-plugin");
 
 module.exports = {
   context: __dirname + "/src",
@@ -24,12 +23,6 @@ module.exports = {
           { from: "options.html" },
           { from: "content.css" },
     ]),
-    new Crx({
-      keyFile: 'key.pem',
-      contentPath: 'build',
-      outputPath: 'dist',
-      name: 'assemblyline',
-    })
   ],
   node: { fs: "empty" }
 };

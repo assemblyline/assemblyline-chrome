@@ -4,9 +4,9 @@
   "description": "Assemblyline Chrome Extension",
   "main": "index.js",
   "scripts": {
-    "build": "npm run clean && webpack",
+    "build": "npm run clean && webpack && zip -r assemblyline.zip build",
     "watch": "webpack --watch",
-    "clean": "rm -rf build && rm -rf dist"
+    "clean": "rm -rf build && rm -f assemblyline.zip"
   },
   "repository": {
     "type": "git",
@@ -20,7 +20,6 @@
   "homepage": "https://github.com/assemblyline/assemblyline-chrome#readme",
   "devDependencies": {
     "copy-webpack-plugin": "^2.1.1",
-    "crx-webpack-plugin": "^0.1.3",
     "handlebars": "^4.0.5",
     "handlebars-template-loader": "^0.6.0",
     "lodash": "^4.11.1",
