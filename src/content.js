@@ -55,6 +55,9 @@ function renderDeployButton(el, commit) {
   if (commit.commitStatus.total_count === 0) { return; }
   var build = _(commit.commitStatus.statuses).filter({ context: 'assemblyline/build' }).first()
   if (build === undefined) { return; }
+  build.defaultDescription = el.getElementsByClassName("message")[0].title;
+  build.shortSha = el.getElementsByClassName("sha")[0].text.trim()
+  build.environments = ["staging", "production","sandbox"];
   hydrate(
     el.getElementsByClassName('commit-links-cell')[0],
     'deploy-button',

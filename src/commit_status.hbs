@@ -1,6 +1,6 @@
 <div class="commit-build-statuses js-menu-container">
   <a class="text-{{state}} tooltipped tooltipped-e js-menu-target" aria-label="{{stateTooltip statuses}}" href="#">
-      {{stateIcon state}}
+      {{icon state}}
   </a>
   <div class="dropdown-menu-content js-menu-content">
     <div class="dropdown-menu dropdown-menu-e">
@@ -13,7 +13,7 @@
           {{#each statuses}}
             <div class="build-status-item">
               <a class="build-status-details right" href="{{target_url}}">Details</a>
-              {{stateIcon state}}
+              {{icon state}}
               <span class="text-muted css-truncate css-truncate-target">
                 <strong class="text-emphasized">{{context}}</strong>
                 {{ description }}

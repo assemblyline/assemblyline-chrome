@@ -1,17 +1,32 @@
-.dropdown-deploy {
+.dropdown-deploy, .dropdown-deploy-button {
   display: inline-block;
 }
 
 
-.dropdown-deploy .dropdown-menu {
+.dropdown-deploy .dropdown-menu, .dropdown-deploy-button .dropdown-menu {
   width: 440px;
   padding-top: 0;
   padding-bottom: 0;
-  margin-top: 7px;
   font-size: 13px;
   line-height: 1.4;
   color: #333;
   text-align: left;
+}
+
+.dropdown-deploy .dropdown-menu {
+  margin-top: 7px;
+}
+
+.dropdown-deploy-button .dropdown-menu {
+  margin-top: -35px;
+}
+
+.deployments .build-status-icon {
+  width: initial !important;
+}
+
+.deployments .form-group .form-control {
+  width: 300px;
 }
 
 .deployments-header {

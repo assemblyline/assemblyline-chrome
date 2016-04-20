@@ -1,4 +1,5 @@
-var _ = require('lodash');
+var _      = require('lodash');
+var client = require('./client');
 
 chrome.storage.local.get({
     commits: {},
@@ -46,7 +47,7 @@ chrome.storage.local.get({
   }
 
   function commitStatus(request, callback) {
-    GET(endpoint + request.repo + '/commits/' + request.sha + '/status', function(data){
+    client.GET(endpoint + request.repo + '/commits/' + request.sha + '/status', etags, function(data){
       var commit = commitFor(request);
       commit.commitStatus = data;
       saveCommit(commit);
@@ -55,7 +56,7 @@ chrome.storage.local.get({
   }
 
   function deployments(request, callback) {
-    GET(endpoint + request.repo + '/deployments?sha=' + request.sha, function(data){
+    client.GET(endpoint + request.repo + '/deployments?sha=' + request.sha, etags, function(data){
       var commit = commitFor(request);
       commit.deployments = _.sortBy(data, function(d) { return - Date.parse(d.updated_at) });
       _.each(commit.deployments, function(deployment) {
@@ -70,7 +71,7 @@ chrome.storage.local.get({
   function deploymentStatuses(request, callback) {
     if (commitFor(request).deployments) {
       _.forEach(commitFor(request).deployments, function(deployment) {
-        GET(deployment.statuses_url, function(statuses){
+        client.GET(deployment.statuses_url, etags, function(statuses){
           if (statuses.length > 0 ) {
             var commit = commitFor(request);
             var deployment = _.find(commit.deployments, ['url', statuses[0].deployment_url]);
@@ -102,28 +103,5 @@ chrome.storage.local.get({
 
   function findCommit(request) {
     return commits[request.repo + '/' + request.sha];
-  }
-
-  function GET(url, callback) {
-    chrome.storage.local.get({token: ''}, function(creds) {
-      var xhr = new XMLHttpRequest();
-
-      xhr.onreadystatechange = function() {
-        if (xhr.readyState == 4) {
-          if (xhr.status == 200) {
-            etags[url] = xhr.getResponseHeader("ETag");
-            callback(JSON.parse(xhr.responseText))
-          };
-        };
-      };
-
-      xhr.open("GET", url, true);
-      xhr.setRequestHeader('Authorization', 'Bearer ' + creds.token); 
-      xhr.setRequestHeader('Accept', 'application/vnd.github.ant-man-preview+json');
-      if(etags[url]) {
-        xhr.setRequestHeader('If-None-Match', etags[url]);
-      };
-      xhr.send();
-    }
   }
 });
