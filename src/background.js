@@ -1,7 +1,6 @@
 var _ = require('lodash');
 
 chrome.storage.local.get({
-    token: '',
     commits: {},
     etags: {},
 }, function(items) {
@@ -106,23 +105,25 @@ chrome.storage.local.get({
   }
 
   function GET(url, callback) {
-    var xhr = new XMLHttpRequest();
+    chrome.storage.local.get({token: ''}, function(creds) {
+      var xhr = new XMLHttpRequest();
 
-    xhr.onreadystatechange = function() {
-      if (xhr.readyState == 4) {
-        if (xhr.status == 200) {
-          etags[url] = xhr.getResponseHeader("ETag");
-          callback(JSON.parse(xhr.responseText))
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4) {
+          if (xhr.status == 200) {
+            etags[url] = xhr.getResponseHeader("ETag");
+            callback(JSON.parse(xhr.responseText))
+          };
         };
       };
-    };
 
-    xhr.open("GET", url, true);
-    xhr.setRequestHeader('Authorization', 'Bearer ' + items.token); 
-    xhr.setRequestHeader('Accept', 'application/vnd.github.ant-man-preview+json');
-    if(etags[url]) {
-      xhr.setRequestHeader('If-None-Match', etags[url]);
-    };
-    xhr.send();
+      xhr.open("GET", url, true);
+      xhr.setRequestHeader('Authorization', 'Bearer ' + creds.token); 
+      xhr.setRequestHeader('Accept', 'application/vnd.github.ant-man-preview+json');
+      if(etags[url]) {
+        xhr.setRequestHeader('If-None-Match', etags[url]);
+      };
+      xhr.send();
+    }
   }
 });
