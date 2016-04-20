@@ -1,0 +1,75 @@
+.dropdown-deploy {
+  display: inline-block;
+}
+
+.deployment .deploy-title {
+  display: inline;
+}
+
+.dropdown-deploy .dropdown-menu {
+    width: 440px;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-top: 7px;
+    font-size: 13px;
+    line-height: 1.4;
+    color: #333;
+    text-align: left;
+}
+
+.deployments-header {
+  padding: 1em;
+  background-color: #f9f9f9;
+}
+
+.deployments-header .state-heading {
+  padding-left: 1em;
+  padding-top: 0.3em;
+}
+
+.deployment {
+  padding: 1em;
+  border-collapse: separate;
+  border-top: 1px solid #e5e5e5;
+}
+
+.deployment .timestamp {
+  color: #767676;
+}
+
+.deployment a.logs {
+  float: right;
+}
+
+.deployment ol.status-list {
+  list-style: none;
+  padding: 10px 0 0 0;
+}
+
+.deployment-description {
+  text-align: left;
+  color: #767676;
+  font-size: 12px;
+}
+
+.deployment-description a {
+  font-size: 14px;
+  display: block;
+  font-weight: bold;
+  color: #333;
+}
+
+a.deployer {
+  display: block;
+  font-weight: bold;
+  color: #333;
+}
+
+.deployer-name {
+    font-size: 14px;
+    text-align: left;
+}
+
+.text-inactive {
+  color: lightgrey !important;
+}

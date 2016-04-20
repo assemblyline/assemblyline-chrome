@@ -1,0 +1,45 @@
+{
+    "manifest_version": 2,
+    "name": "Assemblyline",
+    "version": "0.0.1",
+    "description": "Deployments from within Github",
+    "browser_action": {
+      "default_title": "Assemblyine",
+      "default_icon": {
+        "19": "images/al19.png",
+        "38": "images/al38.png"
+      }
+    },
+    "icons": { 
+      "16": "images/al16.png",
+      "48": "images/al48.png",
+      "128": "images/al128.png"
+    },
+    "content_security_policy": "script-src 'self' https://api.github.com; object-src 'self'",
+    "minimum_chrome_version": "14.0.835.202",
+    "content_scripts": [
+        {
+            "matches": [
+                "https://github.com/*",
+                "https://www.github.com/*"
+            ],
+            "js": [ "content.js" ],
+            "css": [ "content.css" ],
+            "run_at": "document_start"
+        }
+    ],
+    "background": {
+      "scripts": ["background.js"],
+      "persistent": false
+    },
+    "options_ui": {
+      "page": "options.html",
+      "chrome_style": true
+    },
+    "permissions": [
+        "webNavigation",
+        "tabs",
+        "storage",
+        "https://api.github.com/"
+    ]
+}

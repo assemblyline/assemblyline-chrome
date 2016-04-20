@@ -1,0 +1,27 @@
+{
+  "name": "assemblyline-chrome",
+  "version": "0.0.1",
+  "description": "Assemblyline Chrome Extension",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack",
+    "watch": "webpack --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/assemblyline/assemblyline-chrome.git"
+  },
+  "author": "Ed Robinson",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/assemblyline/assemblyline-chrome/issues"
+  },
+  "homepage": "https://github.com/assemblyline/assemblyline-chrome#readme",
+  "devDependencies": {
+    "copy-webpack-plugin": "^2.1.1",
+    "handlebars": "^4.0.5",
+    "handlebars-template-loader": "^0.6.0",
+    "lodash": "^4.11.1",
+    "webpack": "^1.13.0"
+  }
+}

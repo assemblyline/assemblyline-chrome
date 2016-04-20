@@ -1,0 +1,43 @@
+{{#each environments}}
+<div class="dropdown dropdown-deploy js-menu-container">
+  <button type="button" class="text-{{this.state}} btn btn-sm btn-outline tooltipped tooltipped-n js-menu-target" aria-label="View deployment status" aria-haspopup="true">
+    {{stateIcon this.state}}
+    {{this.name}}
+  </button>
+  <div class="dropdown-menu-content anim-scale-in js-menu-content">
+   <div class="dropdown-menu dropdown-menu-s">
+     <div class="deployments-header flex-table">
+       <div class="state-icon flex-table-item">
+         {{stateIcon this.deployments.[0].state 2}}
+       </div>
+       <h3 class="state-heading flex-table-item-primary">
+         {{deployStateHeading this.deployments.[0].state this.name}}
+       </h3>
+     </div>
+     {{#each this.deployments}}
+      <div class="deployment">
+        <div class="flex-table">
+          <a class="flex-table-item" aria-label="emilevauge" href="{{this.creator.url}}">
+            <img alt="@{{this.creator.login}}" class="avatar mr-3" height="32" src="{{this.creator.avatar_url}}&s=64" width="32">
+          </a>
+          <span class="deployment-description flex-table-item-primary">
+          <a href="{{this.statuses.[0].environment_url}}">{{stateIcon this.state}}{{this.description}}</a>requested by {{this.creator.login}} {{relTime this.created_at}}</span>
+        </div>
+        <ol class="status-list">
+          {{#each this.statuses}}
+            <li>
+            {{stateIcon this.state}}
+            {{this.description}}
+            {{relTime this.updated_at}}
+            {{#if this.log_url}}
+              <a class="logs" href="{{this.log_url}}">View Logs</a>
+            {{/if}}
+            </li>
+          {{/each}}
+        </ol>
+     </div>
+     {{/each}}
+   </div>
+  </div>
+</div>
+{{/each}}
