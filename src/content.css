@@ -2,19 +2,16 @@
   display: inline-block;
 }
 
-.deployment .deploy-title {
-  display: inline;
-}
 
 .dropdown-deploy .dropdown-menu {
-    width: 440px;
-    padding-top: 0;
-    padding-bottom: 0;
-    margin-top: 7px;
-    font-size: 13px;
-    line-height: 1.4;
-    color: #333;
-    text-align: left;
+  width: 440px;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-top: 7px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: #333;
+  text-align: left;
 }
 
 .deployments-header {
@@ -66,10 +63,14 @@ a.deployer {
 }
 
 .deployer-name {
-    font-size: 14px;
-    text-align: left;
+  font-size: 14px;
+  text-align: left;
 }
 
 .text-inactive {
   color: lightgrey !important;
+}
+
+div.commit-indicator, .deploy-button, .deployment .deploy-title {
+  display: inline;
 }

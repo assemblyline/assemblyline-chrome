@@ -1,6 +1,7 @@
 require("./helpers");
 var _ = require('lodash');
 var commitStatusTemplate = require("./commit_status.hbs");
+var deployButtonTemplate = require("./deploy_button.hbs");
 var deployStatusTemplate = require("./deploy_status.hbs");
 var repo = document.location.pathname.match(/([^\/]+\/[^\/]+)/)[0]
 
@@ -35,34 +36,42 @@ function render(commit) {
   if (commit.repo !== repo) { return; }
   var el = document.querySelector('[data-channel="' + commit.repo + ':commit:' + commit.sha + '"]');
   renderCommitStatus(el, commit);
+  renderDeployButton(el, commit);
   renderDeployStatus(el, commit);
 }
 
 function renderCommitStatus(el, commit) {
   if (commit.commitStatus === undefined) { return; }
   if (commit.commitStatus.total_count === 0) { return; }
-  var commitIndicator = el.getElementsByClassName("commit-indicator")[0];
-  if (commitIndicator === undefined) {
-    commitIndicator = document.createElement('span');
-    commitIndicator.className = 'commit-indicator';
-    el.getElementsByClassName("commit-meta")[0].appendChild(commitIndicator);
-  } 
-  commitIndicator.innerHTML = commitStatusTemplate(commit.commitStatus);
+  hydrate(
+    el.getElementsByClassName('commit-meta')[0],
+    'commit-indicator',
+    commitStatusTemplate(commit.commitStatus)
+  )
+}
+
+function renderDeployButton(el, commit) {
+  if (commit.commitStatus === undefined) { return; }
+  if (commit.commitStatus.total_count === 0) { return; }
+  var build = _(commit.commitStatus.statuses).filter({ context: 'assemblyline/build' }).first()
+  if (build === undefined) { return; }
+  hydrate(
+    el.getElementsByClassName('commit-links-cell')[0],
+    'deploy-button',
+    deployButtonTemplate(build)
+  )
 }
 
 function renderDeployStatus(el, commit) {
   if (commit.deployments === undefined) { return; }
   if (commit.deployments.length === 0) { return; }
-  var cell = el.getElementsByClassName('table-list-cell')[1];
-  var container = cell.getElementsByClassName('deploy-links-group')[0];
-  if (container === undefined) {
-    container = document.createElement('div');
-    container.className = 'deploy-links-group';
-    cell.appendChild(container);
-  }
-  container.innerHTML = deployStatusTemplate({
-    environments: environments(commit),
-  });
+  hydrate(
+    el.getElementsByClassName('table-list-cell')[1],
+    'deploy-links-group',
+    deployStatusTemplate({
+      environments: environments(commit),
+    })
+  )
 }
 
 function environments(commit) {
@@ -73,4 +82,14 @@ function environments(commit) {
       state: deployments[0].state,
     };
   }).value();
+}
+
+function hydrate(container, className, content) {
+  var wrapper = container.getElementsByClassName(className)[0];
+  if (wrapper === undefined) {
+    wrapper = document.createElement('div');
+    wrapper.className = className;
+    container.appendChild(wrapper);
+  }
+  wrapper.innerHTML = content;
 }
