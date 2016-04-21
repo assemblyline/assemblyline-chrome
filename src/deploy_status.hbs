@@ -23,9 +23,7 @@
           <span class="deployment-description flex-table-item-primary">
             {{#if this.payload.image}}
             <button aria-label="Copy the docker image url" data-copied-hint="Copied!" data-clipboard-text="{{this.payload.image}}" style="float: right" class="btn btn-sm btn-outline js-zeroclipboard zeroclipboard-button tooltipped tooltipped-s" type="button">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" class="octicon">
-                <path fill="none" stroke="#000" stroke-width="1.5" d="M8.0137871 2.725v10.5682M5.7048882 2.725v10.5682M10.322686 2.725v10.5682M12.631577 2.725v10.5682M3.3959914 2.725v10.5682M.70957158.5146H15.290428c.347881.1145.137056.5898.194949.8737v13.9021c-.114976.3477-.589805.1371-.87377.1949H.70957158c-.34779856-.1149-.1371132-.5898-.19494927-.8737V.7095C.5117753.605.6050495.5118.7095716.5146z"/>
-              </svg>
+              {{icon "container"}}
             </button>
             {{/if}}
             <button aria-label="Copy the deployment url" data-copied-hint="Copied!" data-clipboard-text="{{this.url}}" style="float: right" class="btn btn-sm btn-outline js-zeroclipboard zeroclipboard-button tooltipped tooltipped-s" type="button">
