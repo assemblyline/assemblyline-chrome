@@ -4,7 +4,7 @@
 
 
 .dropdown-deploy .dropdown-menu, .dropdown-deploy-button .dropdown-menu {
-  width: 440px;
+  width: 500px;
   padding-top: 0;
   padding-bottom: 0;
   font-size: 13px;
@@ -26,7 +26,7 @@
 }
 
 .deployments .form-group .form-control {
-  width: 300px;
+  width: 365px;
 }
 
 .deployments-header {
