@@ -54,6 +54,7 @@ function renderCommitStatus(el, commit) {
 function renderDeployButton(el, commit) {
   if (commit.commitStatus === undefined) { return; }
   if (commit.commitStatus.total_count === 0) { return; }
+  if (commit.commitStatus.state !== 'success') { return; }
   var build = _(commit.commitStatus.statuses).filter({ context: 'assemblyline/build', state: 'success' }).first()
   if (build) {
     build.defaultDescription = el.getElementsByClassName("message")[0].title;
