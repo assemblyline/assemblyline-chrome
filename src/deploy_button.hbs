@@ -13,19 +13,21 @@
             Deploy ({{shortSha}})
             <br />
             {{defaultDescription}}
+            <br />
+            <input type="text" class="form-control input-monospace input-sm" value="{{image}}" size="47" readonly>
           </h3>
         </div>
-        <div class="deployment flex-table">
+        <div class="deployment form flex-table">
           <dl class="form-group flex-table-item-primary">
             <dt><label>Description</label></dt>
             <dd>
-              <input class="form-control" type="text" value="{{defaultDescription}}">
+              <input class="form-control deploy-description" type="text" value="{{defaultDescription}}">
             </dd>
           </dl>
           <dl class="form-group flex-table-item">
             <dt><label>Environment</label></dt>
             <dd>
-              <select class="form-select">
+              <select class="form-select deploy-environment">
                 {{#each environments}}
                   <option value={{this}}>{{this}}</option>
                 {{/each}}
@@ -33,8 +35,24 @@
             </dd>
           </dl>
         </div>
-        <div class="deployment">
-          <button type="button" class="btn btn-primary">Do It!</button>
+        <div class="deployment loading" style="display:none">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="64" height="64" fill="lightgrey">
+            <circle transform="translate(8 0)" cx="0" cy="16" r="0">
+              <animate attributeName="r" values="0; 4; 0; 0" dur="1.2s" repeatCount="indefinite" begin="0"
+                keytimes="0;0.2;0.7;1" keySplines="0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8;0.2 0.6 0.4 0.8" calcMode="spline" />
+            </circle>
+            <circle transform="translate(16 0)" cx="0" cy="16" r="0">
+              <animate attributeName="r" values="0; 4; 0; 0" dur="1.2s" repeatCount="indefinite" begin="0.3"
+                keytimes="0;0.2;0.7;1" keySplines="0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8;0.2 0.6 0.4 0.8" calcMode="spline" />
+            </circle>
+            <circle transform="translate(24 0)" cx="0" cy="16" r="0">
+              <animate attributeName="r" values="0; 4; 0; 0" dur="1.2s" repeatCount="indefinite" begin="0.6"
+                keytimes="0;0.2;0.7;1" keySplines="0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8;0.2 0.6 0.4 0.8" calcMode="spline" />
+            </circle>
+          </svg>
+        </div>
+        <div class="deployment form-actions">
+          <button type="button" class="deploy-submit btn btn-primary">Do It!</button>
         </div>
       </div>
     </div>

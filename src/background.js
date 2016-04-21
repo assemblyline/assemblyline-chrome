@@ -7,7 +7,6 @@ chrome.storage.local.get({
 }, function(items) {
   var commits  = items.commits;
   var etags    = items.etags;
-  var endpoint = 'https://api.github.com/repos/';
   var urlFilter = {url: [{hostSuffix: 'github.com', urlContains: 'commits'}]};
 
   // When the page suspends, we store the cached state.
@@ -47,7 +46,7 @@ chrome.storage.local.get({
   }
 
   function commitStatus(request, callback) {
-    client.GET(endpoint + request.repo + '/commits/' + request.sha + '/status', etags, function(data){
+    client.GET(client.endpoint + request.repo + '/commits/' + request.sha + '/status', etags, function(data){
       var commit = commitFor(request);
       commit.commitStatus = data;
       saveCommit(commit);
@@ -56,7 +55,7 @@ chrome.storage.local.get({
   }
 
   function deployments(request, callback) {
-    client.GET(endpoint + request.repo + '/deployments?sha=' + request.sha, etags, function(data){
+    client.GET(client.endpoint + request.repo + '/deployments?sha=' + request.sha, etags, function(data){
       var commit = commitFor(request);
       commit.deployments = _.sortBy(data, function(d) { return - Date.parse(d.updated_at) });
       _.each(commit.deployments, function(deployment) {

@@ -45,6 +45,10 @@
   border-top: 1px solid #e5e5e5;
 }
 
+.deployment.loading {
+  text-align: center;
+}
+
 .deployment .timestamp {
   color: #767676;
 }

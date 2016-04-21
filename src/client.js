@@ -1,10 +1,12 @@
+module.exports.endpoint = 'https://api.github.com/repos/';
+
 module.exports.GET = function (url, etags, callback) {
   chrome.storage.local.get({token: ''}, function(creds) {
     var xhr = new XMLHttpRequest();
 
     xhr.onreadystatechange = function() {
       if (xhr.readyState == 4) {
-        if (xhr.status == 200) {
+        if (xhr.status >= 200 && xhr.status < 300) {
           etags[url] = xhr.getResponseHeader("ETag");
           callback(JSON.parse(xhr.responseText))
         };
@@ -14,9 +16,7 @@ module.exports.GET = function (url, etags, callback) {
     xhr.open("GET", url, true);
     xhr.setRequestHeader('Authorization', 'Bearer ' + creds.token); 
     xhr.setRequestHeader('Accept', 'application/vnd.github.ant-man-preview+json');
-    if(etags[url]) {
-      xhr.setRequestHeader('If-None-Match', etags[url]);
-    };
+    if(etags[url]) { xhr.setRequestHeader('If-None-Match', etags[url]); };
     xhr.send();
   });
 }
@@ -27,7 +27,7 @@ module.exports.POST = function (url, payload, callback) {
 
     xhr.onreadystatechange = function() {
       if (xhr.readyState == 4) {
-        if (xhr.status == 200) {
+        if (xhr.status >= 200 && xhr.status < 300) {
           callback(JSON.parse(xhr.responseText))
         };
       };

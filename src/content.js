@@ -1,5 +1,6 @@
 require("./helpers");
 var _ = require('lodash');
+var client = require('./client');
 var commitStatusTemplate = require("./commit_status.hbs");
 var deployButtonTemplate = require("./deploy_button.hbs");
 var deployStatusTemplate = require("./deploy_status.hbs");
@@ -15,7 +16,7 @@ chrome.runtime.onMessage.addListener(function(message) {
 
 function startUpdates(init) {
   shas().forEach( function(sha) { update(sha, init); })
-  setTimeout(function(){ startUpdates(false); }, 5000);
+  setTimeout(function(){ startUpdates(false); }, 60000);
 }
 
 function shas() {
@@ -53,16 +54,39 @@ function renderCommitStatus(el, commit) {
 function renderDeployButton(el, commit) {
   if (commit.commitStatus === undefined) { return; }
   if (commit.commitStatus.total_count === 0) { return; }
-  var build = _(commit.commitStatus.statuses).filter({ context: 'assemblyline/build' }).first()
-  if (build === undefined) { return; }
-  build.defaultDescription = el.getElementsByClassName("message")[0].title;
-  build.shortSha = el.getElementsByClassName("sha")[0].text.trim()
-  build.environments = ["staging", "production","sandbox"];
-  hydrate(
-    el.getElementsByClassName('commit-links-cell')[0],
-    'deploy-button',
-    deployButtonTemplate(build)
-  )
+  var build = _(commit.commitStatus.statuses).filter({ context: 'assemblyline/build', state: 'success' }).first()
+  if (build) {
+    build.defaultDescription = el.getElementsByClassName("message")[0].title;
+    build.shortSha = el.getElementsByClassName("sha")[0].text.trim()
+    build.environments = ["staging", "production","sandbox"];
+    build.image = build.target_url.split('//')[1];
+    hydrate(
+      el.getElementsByClassName('commit-links-cell')[0],
+      'deploy-button',
+      deployButtonTemplate(build)
+    )
+    attachDeployListner(el, build, commit);
+  }
+}
+
+function attachDeployListner(el, build, commit) {
+  var submit = el.getElementsByClassName('deploy-submit')[0]
+  submit.addEventListener('click', function() {
+    submit.disabled = true;
+    el.getElementsByClassName("form")[0].style = "display:none";
+    el.getElementsByClassName("loading")[0].style = "";
+    var description = el.getElementsByClassName("deploy-description")[0].value;
+    var environment = el.getElementsByClassName("deploy-environment")[0].value;
+    client.POST(client.endpoint + repo + '/deployments', {
+      ref:         commit.sha,
+      payload:     { image: build.image },
+      environment: environment,
+      description: description,
+      auto_merge:  false,
+    }, function() {
+      update(commit.sha, false);
+    })
+  })
 }
 
 function renderDeployStatus(el, commit) {
