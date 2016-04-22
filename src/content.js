@@ -4,6 +4,8 @@ var client = require('./client');
 var commitStatusTemplate = require("./commit_status.hbs");
 var deployButtonTemplate = require("./deploy_button.hbs");
 var deployStatusTemplate = require("./deploy_status.hbs");
+var deployStatusButtonTemplate = require("./deploy_status_button.hbs");
+var deployStatusMenuTemplate = require("./deploy_status_menu.hbs");
 var repo = document.location.pathname.match(/([^\/]+\/[^\/]+)/)[0]
 
 chrome.storage.onChanged.addListener(function(changes, namespace) {
@@ -15,11 +17,12 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
 chrome.runtime.onMessage.addListener(function(message) {
   if(message === "init") { 
     shas().forEach( function(sha) {
-      var key = repo + '/' + sha + '/';
-      var keys = [ key + 'status', key + 'deployments']
-      chrome.storage.local.get(keys, function(items) {
-        for (k in items) {
-          render(items[k]);
+      chrome.storage.local.get([
+        repo + '/' + sha + '/' + 'status',
+        repo + '/' + sha + '/' + 'deployments',
+      ], function(items) {
+        for (key in items) {
+          render(items[key]);
         }
       });
     })
@@ -113,13 +116,25 @@ function attachDeployListner(el, build, commit) {
 function renderDeployStatus(el, commit) {
   if (commit.deployments === undefined) { return; }
   if (commit.deployments.length === 0) { return; }
-  hydrate(
-    el.getElementsByClassName('table-list-cell')[1],
-    'deploy-links-group',
-    deployStatusTemplate({
-      environments: environments(commit),
-    })
-  )
+  _.forEach(environments(commit), function(environment) {
+      hydrate(
+        el.getElementsByClassName('table-list-cell')[1],
+        'dropdown dropdown-deploy js-menu-container deploy-' + environment.name,
+        deployStatusTemplate(environment),
+        true
+      )
+        var wrapper = el.getElementsByClassName('deploy-' + environment.name)[0];
+    hydrate(
+      wrapper,
+      'environment-button-container',
+      deployStatusButtonTemplate(environment)
+    )
+    hydrate(
+      wrapper,
+      'dropdown-menu dropdown-menu-se',
+      deployStatusMenuTemplate(environment)
+    )
+  });
 }
 
 function environments(commit) {
@@ -132,12 +147,17 @@ function environments(commit) {
   }).value();
 }
 
-function hydrate(container, className, content) {
+function hydrate(container, className, content, once) {
   var wrapper = container.getElementsByClassName(className)[0];
   if (wrapper === undefined) {
     wrapper = document.createElement('div');
     wrapper.className = className;
     container.appendChild(wrapper);
+    if (once) {
+      wrapper.innerHTML = content;
+    }
   }
-  wrapper.innerHTML = content;
+  if (!once) {
+    wrapper.innerHTML = content;
+  }
 }
