@@ -3,17 +3,17 @@ var client = require('./client');
 
 chrome.storage.local.get({
     commits: {},
-    etags: {},
+    cache: {},
 }, function(items) {
   var commits  = items.commits;
-  var etags    = items.etags;
+  client.cache    = items.cache;
   var urlFilter = {url: [{hostSuffix: 'github.com', urlContains: 'commits'}]};
 
   // When the page suspends, we store the cached state.
   chrome.runtime.onSuspend.addListener(function() {
     chrome.storage.local.set({
       commits: commits,
-      etags:   etags,
+      cache:   client.cache,
     });
   })
 
@@ -46,7 +46,7 @@ chrome.storage.local.get({
   }
 
   function commitStatus(request, callback) {
-    client.GET(client.endpoint + request.repo + '/commits/' + request.sha + '/status', etags, function(data){
+    client.GET(client.endpoint + request.repo + '/commits/' + request.sha + '/status', function(data){
       var commit = commitFor(request);
       commit.commitStatus = data;
       saveCommit(commit);
@@ -55,7 +55,7 @@ chrome.storage.local.get({
   }
 
   function deployments(request, callback) {
-    client.GET(client.endpoint + request.repo + '/deployments?sha=' + request.sha, etags, function(data){
+    client.GET(client.endpoint + request.repo + '/deployments?sha=' + request.sha, function(data){
       var commit = commitFor(request);
       commit.deployments = _.sortBy(data, function(d) { return - Date.parse(d.updated_at) });
       _.each(commit.deployments, function(deployment) {
@@ -70,7 +70,7 @@ chrome.storage.local.get({
   function deploymentStatuses(request, callback) {
     if (commitFor(request).deployments) {
       _.forEach(commitFor(request).deployments, function(deployment) {
-        client.GET(deployment.statuses_url, etags, function(statuses){
+        client.GET(deployment.statuses_url, function(statuses){
           if (statuses.length > 0 ) {
             var commit = commitFor(request);
             var deployment = _.find(commit.deployments, ['url', statuses[0].deployment_url]);

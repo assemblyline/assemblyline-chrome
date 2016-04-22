@@ -1,27 +1,31 @@
-module.exports.endpoint = 'https://api.github.com/repos/';
+var client = {};
+client.endpoint = 'https://api.github.com/repos/';
+client.cache = {};
 
-module.exports.GET = function (url, etags, callback) {
+client.GET = function (url, callback) {
   chrome.storage.local.get({token: ''}, function(creds) {
     var xhr = new XMLHttpRequest();
 
     xhr.onreadystatechange = function() {
       if (xhr.readyState == 4) {
         if (xhr.status >= 200 && xhr.status < 300) {
-          etags[url] = xhr.getResponseHeader("ETag");
-          callback(JSON.parse(xhr.responseText))
-        };
+          client.cache[url] = { etag: xhr.getResponseHeader("ETag"), value: JSON.parse(xhr.responseText) };
+          callback(client.cache[url].value)
+        } else if (xhr.status === 304) {
+          callback(client.cache[url].value)
+        }
       };
     };
 
     xhr.open("GET", url, true);
     xhr.setRequestHeader('Authorization', 'Bearer ' + creds.token); 
     xhr.setRequestHeader('Accept', 'application/vnd.github.ant-man-preview+json');
-    if(etags[url]) { xhr.setRequestHeader('If-None-Match', etags[url]); };
+    if(client.cache[url]) { xhr.setRequestHeader('If-None-Match', client.cache[url].etag); };
     xhr.send();
   });
 }
 
-module.exports.POST = function (url, payload, callback) {
+client.POST = function (url, payload, callback) {
   chrome.storage.local.get({token: ''}, function(creds) {
     var xhr = new XMLHttpRequest();
 
@@ -40,3 +44,5 @@ module.exports.POST = function (url, payload, callback) {
     xhr.send(JSON.stringify(payload));
   });
 }
+
+module.exports = client;
