@@ -16,7 +16,7 @@ chrome.runtime.onMessage.addListener(function(message) {
 
 function startUpdates(init) {
   shas().forEach( function(sha) { update(sha, init); })
-  setTimeout(function(){ startUpdates(false); }, 60000);
+  setTimeout(function(){ startUpdates(false); }, 5000);
 }
 
 function shas() {

@@ -42,7 +42,6 @@ chrome.storage.local.get({
 
     commitStatus(request, callback);
     deployments(request, callback);
-    deploymentStatuses(request, callback);
   }
 
   function commitStatus(request, callback) {
@@ -58,24 +57,21 @@ chrome.storage.local.get({
     client.GET(client.endpoint + request.repo + '/deployments?sha=' + request.sha, function(data){
       var commit = commitFor(request);
       commit.deployments = _.sortBy(data, function(d) { return - Date.parse(d.updated_at) });
-      _.each(commit.deployments, function(deployment) {
-        deployment.state = "pending";
-      })
-      saveCommit(commit);
-      callback(commit);
-      deploymentStatuses(request, callback);
+      deploymentStatuses(commit, callback);
     });
   }
 
-  function deploymentStatuses(request, callback) {
-    if (commitFor(request).deployments) {
-      _.forEach(commitFor(request).deployments, function(deployment) {
+  function deploymentStatuses(commit, callback) {
+    if (commit.deployments) {
+      _.forEach(commit.deployments, function(deployment) {
         client.GET(deployment.statuses_url, function(statuses){
-          if (statuses.length > 0 ) {
-            var commit = commitFor(request);
-            var deployment = _.find(commit.deployments, ['url', statuses[0].deployment_url]);
-            deployment.statuses = _.sortBy(statuses, function(s) { return - Date.parse(s.updated_at) });
+          deployment.statuses = _.sortBy(statuses, function(s) { return - Date.parse(s.updated_at) });
+          if (deployment.statuses.length > 0 ) {
             deployment.state = deployment.statuses[0].state;
+          } else {
+            deployment.state = 'pending'
+          }
+          if (_.every(commit.deployment, 'statuses')) {
             saveCommit(commit);
             callback(commit);
           }
