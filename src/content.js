@@ -6,17 +6,32 @@ var deployButtonTemplate = require("./deploy_button.hbs");
 var deployStatusTemplate = require("./deploy_status.hbs");
 var repo = document.location.pathname.match(/([^\/]+\/[^\/]+)/)[0]
 
-chrome.runtime.onMessage.addListener(function(message) {
-  if(message === "init") {
-    startUpdates(true);
-  } else {
-    render(message);
+chrome.storage.onChanged.addListener(function(changes, namespace) {
+  for (key in changes) {
+      render(changes[key].newValue);
   }
 })
 
-function startUpdates(init) {
-  shas().forEach( function(sha) { update(sha, init); })
-  setTimeout(function(){ startUpdates(false); }, 5000);
+chrome.runtime.onMessage.addListener(function(message) {
+  if(message === "init") { 
+    shas().forEach( function(sha) {
+      var key = repo + '/' + sha + '/';
+      var keys = [ key + 'status', key + 'deployments']
+      chrome.storage.local.get(keys, function(items) {
+        for (k in items) {
+          render(items[k]);
+        }
+      });
+    })
+    startUpdates(true);
+  }
+})
+
+function startUpdates() {
+  shas().forEach( function(sha) { update(sha); })
+  setTimeout(function(){
+    startUpdates();
+  }, 5000);
 }
 
 function shas() {
@@ -25,20 +40,25 @@ function shas() {
   });
 }
 
-function update(sha, init) {
+function update(sha) {
   chrome.runtime.sendMessage({
-    init: init,
     repo: repo,
     sha: sha,
   })
 }
 
 function render(commit) {
+  if (commit === undefined) { return; }
+  if (commit.sha === undefined) { return; }
   if (commit.repo !== repo) { return; }
   var el = document.querySelector('[data-channel="' + commit.repo + ':commit:' + commit.sha + '"]');
-  renderCommitStatus(el, commit);
-  renderDeployButton(el, commit);
-  renderDeployStatus(el, commit);
+  if (commit.commitStatus) {
+    renderCommitStatus(el, commit);
+    renderDeployButton(el, commit);
+  }
+  if (commit.deployments) {
+    renderDeployStatus(el, commit);
+  }
 }
 
 function renderCommitStatus(el, commit) {

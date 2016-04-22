@@ -1,3 +1,4 @@
+var _      = require('lodash');
 var client = {};
 client.endpoint = 'https://api.github.com/repos/';
 client.cache = {};
@@ -10,9 +11,9 @@ client.GET = function (url, callback) {
       if (xhr.readyState == 4) {
         if (xhr.status >= 200 && xhr.status < 300) {
           client.cache[url] = { etag: xhr.getResponseHeader("ETag"), value: JSON.parse(xhr.responseText) };
-          callback(client.cache[url].value)
+          callback(_.clone(client.cache[url].value))
         } else if (xhr.status === 304) {
-          callback(client.cache[url].value)
+          callback(_.clone(client.cache[url].value))
         }
       };
     };

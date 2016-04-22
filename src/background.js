@@ -5,23 +5,21 @@ chrome.storage.local.get({
     commits: {},
     cache: {},
 }, function(items) {
-  var commits  = items.commits;
   client.cache    = items.cache;
   var urlFilter = {url: [{hostSuffix: 'github.com', urlContains: 'commits'}]};
 
   // When the page suspends, we store the cached state.
   chrome.runtime.onSuspend.addListener(function() {
     chrome.storage.local.set({
-      commits: commits,
       cache:   client.cache,
     });
   })
 
   chrome.runtime.onMessage.addListener(
-    function(request, sender) {
-      getData(request, function(commit) {
-        chrome.tabs.sendMessage(sender.tab.id, commit);
-      })
+    function(commit) {
+      if (commit.sha === undefined) { return; }
+      if (commit.repo === undefined) { return; }
+      getData(commit);
     }
   );
 
@@ -33,35 +31,26 @@ chrome.storage.local.get({
     chrome.tabs.sendMessage(e.tabId, "init");
   }, urlFilter);
 
-  function getData(request, callback) {
-    if (request.init) {
-      if (findCommit(request)) {
-        callback(commitFor(request));
-      }
-    }
-
-    commitStatus(request, callback);
-    deployments(request, callback);
+  function getData(commit) {
+    commitStatus(_.clone(commit));
+    deployments(_.clone(commit));
   }
 
-  function commitStatus(request, callback) {
-    client.GET(client.endpoint + request.repo + '/commits/' + request.sha + '/status', function(data){
-      var commit = commitFor(request);
+  function commitStatus(commit) {
+    client.GET(client.endpoint + commit.repo + '/commits/' + commit.sha + '/status', function(data){
       commit.commitStatus = data;
       saveCommit(commit);
-      callback(commit);
     });
   }
 
-  function deployments(request, callback) {
-    client.GET(client.endpoint + request.repo + '/deployments?sha=' + request.sha, function(data){
-      var commit = commitFor(request);
+  function deployments(commit) {
+    client.GET(client.endpoint + commit.repo + '/deployments?sha=' + commit.sha, function(data){
       commit.deployments = _.sortBy(data, function(d) { return - Date.parse(d.updated_at) });
-      deploymentStatuses(commit, callback);
+      deploymentStatuses(commit);
     });
   }
 
-  function deploymentStatuses(commit, callback) {
+  function deploymentStatuses(commit) {
     if (commit.deployments) {
       _.forEach(commit.deployments, function(deployment) {
         client.GET(deployment.statuses_url, function(statuses){
@@ -73,7 +62,6 @@ chrome.storage.local.get({
           }
           if (_.every(commit.deployment, 'statuses')) {
             saveCommit(commit);
-            callback(commit);
           }
         });
       });
@@ -81,22 +69,11 @@ chrome.storage.local.get({
   }
 
   function saveCommit(commit) {
-    commits[commit.repo + '/' + commit.sha] = commit;
-  }
-
-  function commitFor(request) {
-    var commit = findCommit(request);
-    if (commit) {
-      return commit;
-    } else {
-      return {
-        repo:  request.repo,
-        sha:   request.sha,
-      }
-    }
-  }
-
-  function findCommit(request) {
-    return commits[request.repo + '/' + request.sha];
+    var key = commit.repo + '/' + commit.sha;
+    if (commit.commitStatus) { key = key + '/' + 'status'; }
+    if (commit.deployments) { key = key + '/' + 'deployments'; }
+    var save = {};
+    save[key] = commit;
+    chrome.storage.local.set(save);
   }
 });
