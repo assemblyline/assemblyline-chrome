@@ -3,17 +3,8 @@ var client = require('./client');
 
 chrome.storage.local.get({
     commits: {},
-    cache: {},
 }, function(items) {
-  client.cache    = items.cache;
   var urlFilter = {url: [{hostSuffix: 'github.com', urlContains: 'commits'}]};
-
-  // When the page suspends, we store the etag cache
-  chrome.runtime.onSuspend.addListener(function() {
-    chrome.storage.local.set({
-      cache:   client.cache,
-    });
-  })
 
   chrome.runtime.onMessage.addListener(
     function(commit) {
@@ -72,10 +63,7 @@ chrome.storage.local.get({
     var key = commit.repo + '/' + commit.sha;
     if (commit.commitStatus) { key = key + '/' + 'status'; }
     if (commit.deployments) { key = key + '/' + 'deployments'; }
-    var save = {
-      // store the etag cache
-      cache: client.cache
-    };
+    var save = {};
     save[key] = commit;
     chrome.storage.local.set(save);
   }
