@@ -116,10 +116,14 @@ function attachDeployListner(el, build, commit) {
   var submit = el.getElementsByClassName('deploy-submit')[0]
   submit.addEventListener('click', function() {
     submit.disabled = true;
-    el.getElementsByClassName("form")[0].style = "display:none";
-    el.getElementsByClassName("loading")[0].style = "";
+    var loading = el.getElementsByClassName("loading")[0];
+    var dropdown = el.getElementsByClassName('dropdown-deploy-button')[0]
+
     var description = el.getElementsByClassName("deploy-description")[0].value;
     var environment = el.getElementsByClassName("deploy-environment")[0].value;
+
+    loading.removeAttribute('style')
+
     client.POST(client.endpoint + repo + '/deployments', {
       ref:         commit.sha,
       payload:     { image: build.image },
@@ -127,7 +131,9 @@ function attachDeployListner(el, build, commit) {
       description: description,
       auto_merge:  false,
     }, function() {
-      update(commit.sha);
+      loading.setAttribute('style', 'display:none')
+      el.getElementsByClassName('dropdown-deploy-button')[0].classList.remove('active');
+      el.getElementsByClassName('deploy-' + environment)[0].getElementsByClassName('js-menu-target')[0].click();
     })
   })
 }

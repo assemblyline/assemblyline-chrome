@@ -48,10 +48,6 @@
   border-top: 1px solid #e5e5e5;
 }
 
-.deployment.loading {
-  text-align: center;
-}
-
 .deployment .timestamp {
   color: #767676;
 }
@@ -95,4 +91,32 @@ a.deployer {
 
 div.commit-indicator, .deploy-button, .deployment .deploy-title {
   display: inline;
+}
+
+.deployment.loading {
+  height: 4px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  padding: 0;
+}
+
+.deployment.loading:before{
+  display: block;
+  position: absolute;
+  content: "";
+  left: -200px;
+  width: 200px;
+  height: 4px;
+  background-color: #2980b9;
+  animation: loading 2s linear infinite;
+}
+
+@keyframes loading {
+    from {left: -200px; width: 30%;}
+    50% {width: 30%;}
+    70% {width: 70%;}
+    80% { left: 50%;}
+    95% {left: 120%;}
+    to {left: 100%;}
 }
