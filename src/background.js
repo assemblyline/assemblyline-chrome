@@ -8,7 +8,7 @@ chrome.storage.local.get({
   client.cache    = items.cache;
   var urlFilter = {url: [{hostSuffix: 'github.com', urlContains: 'commits'}]};
 
-  // When the page suspends, we store the cached state.
+  // When the page suspends, we store the etag cache
   chrome.runtime.onSuspend.addListener(function() {
     chrome.storage.local.set({
       cache:   client.cache,
@@ -72,7 +72,10 @@ chrome.storage.local.get({
     var key = commit.repo + '/' + commit.sha;
     if (commit.commitStatus) { key = key + '/' + 'status'; }
     if (commit.deployments) { key = key + '/' + 'deployments'; }
-    var save = {};
+    var save = {
+      // store the etag cache
+      cache: client.cache
+    };
     save[key] = commit;
     chrome.storage.local.set(save);
   }
