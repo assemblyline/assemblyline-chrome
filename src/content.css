@@ -2,7 +2,6 @@
   display: inline-block;
 }
 
-
 .dropdown-deploy .dropdown-menu, .dropdown-deploy-button .dropdown-menu {
   width: 500px;
   padding-top: 0;
@@ -19,6 +18,10 @@
 
 .dropdown-deploy-button .dropdown-menu {
   margin-top: -35px;
+}
+
+.dropdown-deploy {
+  padding: 0.5em 0.5em 0.5em 0em;
 }
 
 .deployments .build-status-icon {

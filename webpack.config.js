@@ -14,6 +14,7 @@ module.exports = {
   module: {
     loaders: [
       { test: /\.hbs$/, loader: "handlebars-template-loader" },
+      { test: /\.js$/, loader: "uglify" },
     ],
   },
   plugins: [
