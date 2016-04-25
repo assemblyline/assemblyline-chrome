@@ -1,3 +1,5 @@
+var _      = require('lodash');
+
 function saveOptions() {
   var token = document.getElementById('token').value;
   chrome.storage.local.set({
@@ -16,18 +18,22 @@ function restoreOptions() {
     document.getElementById('token').value = items.token;
   });
 
-  chrome.storage.local.getBytesInUse('cache', function(bytes) {
+  chrome.storage.local.getBytesInUse(null, function(bytes) {
     document.getElementById('cache-info').innerHTML = 'Cache size: ' + Math.round(bytes / 1024)  + ' KiB';
   })
 }
 document.addEventListener('DOMContentLoaded', restoreOptions);
 
 function clearCache() {
-  chrome.storage.local.set({
-    cache: {},
-  }, function() {
-    restoreOptions();
-    document.getElementById('cache').innerHTML = '<b>Cache Cleared</b>';
+  chrome.storage.local.get('token', function(items) {
+    chrome.storage.local.clear(function() {
+      chrome.storage.local.set({
+        token: items.token,
+      }, function() {
+        restoreOptions();
+        document.getElementById('cache').innerHTML = '<b>Cache Cleared</b>';
+      });
+    });
   });
 }
 document.getElementById('cache').addEventListener('click', clearCache);
