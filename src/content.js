@@ -16,7 +16,7 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
 
 chrome.runtime.onMessage.addListener(function(message) {
   if(message === "init") { 
-    shas().forEach( function(sha) {
+    shas().each(function(sha) {
       chrome.storage.local.get([
         repo + '/' + sha + '/' + 'status',
         repo + '/' + sha + '/' + 'deployments',
@@ -26,21 +26,40 @@ chrome.runtime.onMessage.addListener(function(message) {
         }
       });
     })
-    startUpdates(true);
+    startUpdates();
+    updateActive()
   }
 })
 
+// Request the backend updates the data for each sha on the page every minute
 function startUpdates() {
-  shas().forEach( function(sha) { update(sha); })
+  shas().each(function(sha) { update(sha); })
   setTimeout(function(){
     startUpdates();
-  }, 5000);
+  }, 60000);
+}
+
+// Request the backend updates the data for each sha with an active dropdown
+// every second.
+function updateActive() {
+  shas().each(function(sha) {
+    if(_.size(shaContainer(repo, sha).getElementsByClassName("active")) > 0) {
+      update(sha);
+    }
+  })
+  setTimeout(function(){
+    updateActive();
+  }, 1000);
 }
 
 function shas() {
-  return _.map(document.getElementsByClassName("commit"), function(commit) {
+  return _(document.getElementsByClassName("commit")).map(function(commit) {
     return commit.dataset.channel.split(':')[2];
   });
+}
+
+function shaContainer(repo, sha) {
+  return document.querySelector('[data-channel="' + repo + ':commit:' + sha + '"]');
 }
 
 function update(sha) {
@@ -54,7 +73,7 @@ function render(commit) {
   if (commit === undefined) { return; }
   if (commit.sha === undefined) { return; }
   if (commit.repo !== repo) { return; }
-  var el = document.querySelector('[data-channel="' + commit.repo + ':commit:' + commit.sha + '"]');
+  var el = shaContainer(commit.repo, commit.sha);
   if (commit.commitStatus) {
     renderCommitStatus(el, commit);
     renderDeployButton(el, commit);
@@ -108,7 +127,7 @@ function attachDeployListner(el, build, commit) {
       description: description,
       auto_merge:  false,
     }, function() {
-      update(commit.sha, false);
+      update(commit.sha);
     })
   })
 }
