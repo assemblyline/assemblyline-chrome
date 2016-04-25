@@ -60,7 +60,7 @@ chrome.storage.local.get({
           } else {
             deployment.state = 'pending'
           }
-          if (_.every(commit.deployment, 'statuses')) {
+          if (_.every(commit.deployments, 'statuses')) {
             saveCommit(commit);
           }
         });
