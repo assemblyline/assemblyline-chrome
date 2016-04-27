@@ -1,6 +1,6 @@
 {
   "name": "assemblyline-chrome",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "Assemblyline Chrome Extension",
   "main": "index.js",
   "scripts": {
