@@ -86,8 +86,12 @@ Handlebars.registerHelper('deployStateHeading', function(state, environment) {
       return 'Deployment to ' + environment + ' is in progress';
     case "inactive":
       return 'No longer deployed to ' + environment;
+    case "error":
+      return 'There was an error with the deployment to ' + environment;
+    case "failure":
+      return 'The deployment to ' + environment + ' failed';
     default:
-      return 'There were issues with the deployment to ' + environment;
+      return 'Waiting for deployment to ' + environment;
   }
 })
 

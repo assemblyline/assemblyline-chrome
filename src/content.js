@@ -134,33 +134,40 @@ function attachDeployListner(el, build, commit) {
       submit.disabled = false;
       loading.setAttribute('style', 'display:none')
       el.getElementsByClassName('dropdown-deploy-button')[0].classList.remove('active');
-      el.getElementsByClassName('deploy-' + environment)[0].getElementsByClassName('js-menu-target')[0].click();
+      showDeployProgress(el, environment);
     })
   })
+}
+
+function showDeployProgress(el, environment) {
+  renderEnvironment(el, { name: environment, state: 'pending', deployments: []});
+  el.getElementsByClassName('deploy-' + environment)[0].getElementsByClassName('js-menu-target')[0].click();
 }
 
 function renderDeployStatus(el, commit) {
   if (commit.deployments === undefined) { return; }
   if (commit.deployments.length === 0) { return; }
-  _.forEach(environments(commit), function(environment) {
-      hydrate(
-        el.getElementsByClassName('table-list-cell')[1],
-        'dropdown dropdown-deploy js-menu-container deploy-' + environment.name,
-        deployStatusTemplate(environment),
-        true
-      )
-        var wrapper = el.getElementsByClassName('deploy-' + environment.name)[0];
-    hydrate(
+  _.forEach(environments(commit), function(environment) { renderEnvironment(el, environment); });
+}
+
+function renderEnvironment(el, environment) {
+  hydrate(
+      el.getElementsByClassName('table-list-cell')[1],
+      'dropdown dropdown-deploy js-menu-container deploy-' + environment.name,
+      deployStatusTemplate(environment),
+      true
+  );
+  var wrapper = el.getElementsByClassName('deploy-' + environment.name)[0];
+  hydrate(
       wrapper,
       'environment-button-container',
       deployStatusButtonTemplate(environment)
-    )
-    hydrate(
+  );
+  hydrate(
       wrapper,
       'dropdown-menu dropdown-menu-se',
       deployStatusMenuTemplate(environment)
-    )
-  });
+  );
 }
 
 function environments(commit) {
@@ -174,6 +181,7 @@ function environments(commit) {
 }
 
 function hydrate(container, className, content, once) {
+  console.log("Hydrating: " + container + " " + className)
   var wrapper = container.getElementsByClassName(className)[0];
   if (wrapper === undefined) {
     wrapper = document.createElement('div');
