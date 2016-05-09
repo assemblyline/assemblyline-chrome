@@ -181,7 +181,6 @@ function environments(commit) {
 }
 
 function hydrate(container, className, content, once) {
-  console.log("Hydrating: " + container + " " + className)
   var wrapper = container.getElementsByClassName(className)[0];
   if (wrapper === undefined) {
     wrapper = document.createElement('div');
