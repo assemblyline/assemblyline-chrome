@@ -131,6 +131,7 @@ function attachDeployListner(el, build, commit) {
       description: description,
       auto_merge:  false,
     }, function() {
+      submit.disabled = false;
       loading.setAttribute('style', 'display:none')
       el.getElementsByClassName('dropdown-deploy-button')[0].classList.remove('active');
       el.getElementsByClassName('deploy-' + environment)[0].getElementsByClassName('js-menu-target')[0].click();
