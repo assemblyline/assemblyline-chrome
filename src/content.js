@@ -54,12 +54,12 @@ function updateActive() {
 
 function shas() {
   return _(document.getElementsByClassName("commit")).map(function(commit) {
-    return commit.dataset.channel.split(':')[2];
+    return commit.dataset.channel.split(':')[5];
   });
 }
 
 function shaContainer(repo, sha) {
-  return document.querySelector('[data-channel="' + repo + ':commit:' + sha + '"]');
+  return document.querySelector('[href="/' + repo + '/commit/' + sha + '"]').parentNode.parentNode.parentNode;
 }
 
 function update(sha) {

@@ -1,6 +1,6 @@
 {
   "name": "assemblyline-chrome",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "dependencies": {
     "copy-webpack-plugin": {
       "version": "2.1.1",
@@ -1652,15 +1652,15 @@
                       "from": "ansi@~0.3.1",
                       "resolved": "https://registry.npmjs.org/ansi/-/ansi-0.3.1.tgz"
                     },
-                    "ansi-styles": {
-                      "version": "2.2.1",
-                      "from": "ansi-styles@^2.2.1",
-                      "resolved": "https://registry.npmjs.org/ansi-styles/-/ansi-styles-2.2.1.tgz"
-                    },
                     "ansi-regex": {
                       "version": "2.0.0",
                       "from": "ansi-regex@^2.0.0",
                       "resolved": "https://registry.npmjs.org/ansi-regex/-/ansi-regex-2.0.0.tgz"
+                    },
+                    "ansi-styles": {
+                      "version": "2.2.1",
+                      "from": "ansi-styles@^2.2.1",
+                      "resolved": "https://registry.npmjs.org/ansi-styles/-/ansi-styles-2.2.1.tgz"
                     },
                     "are-we-there-yet": {
                       "version": "1.1.2",
@@ -1867,15 +1867,15 @@
                       "from": "is-typedarray@~1.0.0",
                       "resolved": "https://registry.npmjs.org/is-typedarray/-/is-typedarray-1.0.0.tgz"
                     },
-                    "isarray": {
-                      "version": "1.0.0",
-                      "from": "isarray@~1.0.0",
-                      "resolved": "https://registry.npmjs.org/isarray/-/isarray-1.0.0.tgz"
-                    },
                     "isstream": {
                       "version": "0.1.2",
                       "from": "isstream@~0.1.2",
                       "resolved": "https://registry.npmjs.org/isstream/-/isstream-0.1.2.tgz"
+                    },
+                    "isarray": {
+                      "version": "1.0.0",
+                      "from": "isarray@~1.0.0",
+                      "resolved": "https://registry.npmjs.org/isarray/-/isarray-1.0.0.tgz"
                     },
                     "jodid25519": {
                       "version": "1.0.2",
@@ -1947,15 +1947,15 @@
                       "from": "minimist@0.0.8",
                       "resolved": "https://registry.npmjs.org/minimist/-/minimist-0.0.8.tgz"
                     },
-                    "mkdirp": {
-                      "version": "0.5.1",
-                      "from": "mkdirp@>=0.3.0 <0.4.0||>=0.4.0 <0.5.0||>=0.5.0 <0.6.0",
-                      "resolved": "https://registry.npmjs.org/mkdirp/-/mkdirp-0.5.1.tgz"
-                    },
                     "ms": {
                       "version": "0.7.1",
                       "from": "ms@0.7.1",
                       "resolved": "https://registry.npmjs.org/ms/-/ms-0.7.1.tgz"
+                    },
+                    "mkdirp": {
+                      "version": "0.5.1",
+                      "from": "mkdirp@>=0.3.0 <0.4.0||>=0.4.0 <0.5.0||>=0.5.0 <0.6.0",
+                      "resolved": "https://registry.npmjs.org/mkdirp/-/mkdirp-0.5.1.tgz"
                     },
                     "node-uuid": {
                       "version": "1.4.7",
