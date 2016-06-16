@@ -26,17 +26,14 @@ chrome.runtime.onMessage.addListener(function(message) {
         }
       });
     })
-    startUpdates();
+    loadPage();
     updateActive()
   }
 })
 
-// Request the backend updates the data for each sha on the page every minute
-function startUpdates() {
+// Request the backend loads the data for each sha on the page.
+function loadPage() {
   shas().each(function(sha) { update(sha); })
-  setTimeout(function(){
-    startUpdates();
-  }, 60000);
 }
 
 // Request the backend updates the data for each sha with an active dropdown
