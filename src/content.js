@@ -1,7 +1,6 @@
 require("./helpers");
 var _ = require('lodash');
 var client = require('./client');
-var commitStatusTemplate = require("./commit_status.hbs");
 var deployButtonTemplate = require("./deploy_button.hbs");
 var deployStatusTemplate = require("./deploy_status.hbs");
 var deployStatusButtonTemplate = require("./deploy_status_button.hbs");
@@ -72,22 +71,11 @@ function render(commit) {
   if (commit.repo !== repo) { return; }
   var el = shaContainer(commit.repo, commit.sha);
   if (commit.commitStatus) {
-    renderCommitStatus(el, commit);
     renderDeployButton(el, commit);
   }
   if (commit.deployments) {
     renderDeployStatus(el, commit);
   }
-}
-
-function renderCommitStatus(el, commit) {
-  if (commit.commitStatus === undefined) { return; }
-  if (commit.commitStatus.total_count === 0) { return; }
-  hydrate(
-    el.getElementsByClassName('commit-meta')[0],
-    'commit-indicator',
-    commitStatusTemplate(commit.commitStatus)
-  )
 }
 
 function renderDeployButton(el, commit) {

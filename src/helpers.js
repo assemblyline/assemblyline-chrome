@@ -6,11 +6,21 @@ Handlebars.registerHelper('scale', function(n, factor) {
   return n * factor;
 });
 
+Handlebars.registerHelper('statusClass', function(state) {
+  return "text-" + (
+    {
+      success: 'green',
+      error:   'red',
+      failure: 'red',
+    }[state] || state
+  );
+})
+
 Handlebars.registerHelper('icon', function(name, scale) {
   if (name) {
     var icon = {
       success: {
-        css:   'octicon-check build-status-icon text-success',
+        css:   'octicon-check build-status-icon text-green',
         path:  'M12 5L4 13 0 9l1.5-1.5 2.5 2.5 6.5-6.5 1.5 1.5z',
         width:  12,
         height: 16,
@@ -22,13 +32,13 @@ Handlebars.registerHelper('icon', function(name, scale) {
         height: 16,
       },
       error: {
-        css:   'octicon-x build-status-icon text-error',
+        css:   'octicon-x build-status-icon text-red',
         path:  'M7.48 8l3.75 3.75-1.48 1.48-3.75-3.75-3.75 3.75-1.48-1.48 3.75-3.75L0.77 4.25l1.48-1.48 3.75 3.75 3.75-3.75 1.48 1.48-3.75 3.75z',
         width:  12,
         height: 16,
       },
       failure: {
-        css:   'octicon-x build-status-icon text-failure',
+        css:   'octicon-x build-status-icon text-red',
         path:  'M7.48 8l3.75 3.75-1.48 1.48-3.75-3.75-3.75 3.75-1.48-1.48 3.75-3.75L0.77 4.25l1.48-1.48 3.75 3.75 3.75-3.75 1.48 1.48-3.75 3.75z',
         width:  12,
         height: 16,
