@@ -79,22 +79,26 @@ function render(commit) {
 }
 
 function renderDeployButton(el, commit) {
-  if (commit.commitStatus === undefined) { return; }
-  if (commit.commitStatus.total_count === 0) { return; }
-  if (commit.commitStatus.state !== 'success') { return; }
-  var build = _(commit.commitStatus.statuses).filter({ context: 'assemblyline/build', state: 'success' }).first()
-  if (build) {
-    build.defaultDescription = el.getElementsByClassName("message")[0].title;
-    build.shortSha = el.getElementsByClassName("sha")[0].text.trim()
-    build.environments = ["staging", "production","sandbox"];
-    build.image = build.target_url.split('//')[1];
-    hydrate(
-      el.getElementsByClassName('commit-links-cell')[0],
-      'deploy-button',
-      deployButtonTemplate(build)
-    )
-    attachDeployListner(el, build, commit);
-  }
+  chrome.storage.local.get({
+    environments: ['staging','production'],
+  }, function(config) {
+    if (commit.commitStatus === undefined) { return; }
+    if (commit.commitStatus.total_count === 0) { return; }
+    if (commit.commitStatus.state !== 'success') { return; }
+    var build = _(commit.commitStatus.statuses).filter({ context: 'assemblyline/build', state: 'success' }).first()
+    if (build) {
+      build.defaultDescription = el.getElementsByClassName("message")[0].title;
+      build.shortSha = el.getElementsByClassName("sha")[0].text.trim()
+      build.environments = config.environments;
+      build.image = build.target_url.split('//')[1];
+      hydrate(
+        el.getElementsByClassName('commit-links-cell')[0],
+        'deploy-button',
+        deployButtonTemplate(build)
+      )
+      attachDeployListner(el, build, commit);
+    }
+  });
 }
 
 function attachDeployListner(el, build, commit) {
