@@ -62,19 +62,20 @@ configure the token used by the extension.
 ## Development
 
 The extension is built with [webpack](https://webpack.github.io/).
+Dependencies are managed with [yarn](https://yarnpkg.com/).
 
 To build a zip file ready to upload to the chrome webstore do this:
 
 ```
-npm install
-npm run build
+yarn install
+yarn run build
 ```
 
 If you want to hack on the code:
 
 ```
-npm install
-npm run watch
+yarn install
+yarn run watch
 ```
 
 Then visit [chrome extensions settings page](chrome://extensions/) and click on
