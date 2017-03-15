@@ -1,10 +1,10 @@
 {
   "name": "assemblyline-chrome",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "Assemblyline Chrome Extension",
   "main": "index.js",
   "scripts": {
-    "build": "npm run clean && webpack && zip -r assemblyline.zip build",
+    "build": "yarn run clean && webpack && zip -r assemblyline.zip build",
     "watch": "webpack --watch",
     "clean": "rm -rf build && rm -f assemblyline.zip"
   },

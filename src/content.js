@@ -50,7 +50,7 @@ function updateActive() {
 
 function shas() {
   return _(document.getElementsByClassName("commit")).map(function(commit) {
-    return commit.dataset.channel.split(':')[5];
+    return /commit:([a-f0-9]+)/.exec(commit.dataset.channel)[1];
   });
 }
 
