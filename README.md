@@ -5,18 +5,7 @@ The assemblyline chrome extension is built to enable a workflow where
 applications built using _Assemblyline_ can be deployed from within the github
 web interface.
 
-This is enabled by adding 3 missing features to the github web interface.
-
-### Commit Statuses extended to all commit listings
-
-Github provides a nice interface to view 
-[commit statuses](https://developer.github.com/v3/repos/statuses/) in pull
-requests.  We want a workflow where we can view the commit statuses on all
-branches. The extension re-implements the functionality available on the commit
-view of pull requests in the standard branch centric commit view.
-
-This means that before deploying a particular commit from master (or any other
-branch) we can check that CI tasks have been successful.
+This is enabled by adding 2 missing features to the github web interface.
 
 ### Deploy Button
 
