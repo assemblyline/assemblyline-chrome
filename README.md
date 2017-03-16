@@ -12,24 +12,24 @@ This is enabled by adding 3 missing features to the github web interface.
 Github provides a nice interface to view 
 [commit statuses](https://developer.github.com/v3/repos/statuses/) in pull
 requests.  We want a workflow where we can view the commit statuses on all
-branches. The extension re-impliments the functionality avalible on the commit
+branches. The extension re-implements the functionality available on the commit
 view of pull requests in the standard branch centric commit view.
 
 This means that before deploying a particular commit from master (or any other
-branch) we can check that CI tasks have been sucessfull.
+branch) we can check that CI tasks have been successful.
 
 ### Deploy Button
 
 Where a commit has passing commit statuses, and url for a docker image
-is avalible in the `target_url` field of a commit status with
+is available in the `target_url` field of a commit status with
 the `assemblyline/build` context, UI is provided to request a deployment
 via the [deployments api](https://developer.github.com/v3/repos/deployments/)
 
 This UI shows the url of the docker image, and allows the user to choose
-the environment (i.e. kubentes namespace to deploy the application to)
+the environment (i.e. kubernetes namespace to deploy the application to)
 and a description of the deployment (defaulted to the current commit message)
 As this UI is only coupled to the github deployments API, it is possible
-to experiment with diferent tools that will actuly make the deployment
+to experiment with different tools that will actually make the deployment
 happen. A deployment tool that will be configured using `Assemblyfile`
 is in development.
 
@@ -94,10 +94,10 @@ your changes will take effect in the browser.
 ## LICENSE
 
 This code is licensed under an [MIT licence](./LICENSE). If causes you any
-dificulty in using the code, let us know as we are happy to add any (reasonable)
+difficulty in using the code, let us know as we are happy to add any (reasonable)
 licence as required.
 
-## Contibuting
+## Contributing
 
 * Contributions are very welcome, and we will do everything we can to help you do so.
 * This project is released with a [Contributor Code of Conduct](./CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
